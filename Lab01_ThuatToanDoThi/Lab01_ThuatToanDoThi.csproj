@@ -52,9 +52,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\Data.txt" />
+    <Content Include="Data\Data1.txt" />
     <Content Include="Data\Data2.txt" />
     <Content Include="Data\Data3.txt" />
+    <Content Include="Data\Data4.txt" />
+    <Content Include="Data\Unknown.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,15 +14,25 @@ namespace Lab01_ThuatToanDoThi
         //Fields 
         public const int Max = 10000; //Số đỉnh tối đa của đồ thị 
         private int n;     //Số đỉnh của đồ thị hiện tại 
+        private int m;     //Số cạnh của đồ thị hiện tại
         private int[,] matrix; //Ma trận lưu trữ những gì nó đọc được từ file data.txt ( trong thư mục Data ) 
-        private List<int>[] adjacencyList; //dạng List chứa các danh sách con (List trong List ) 
-
+        private List<int>[] adjacencyList; //dạng List chứa các danh sách con (List trong List )
+        private List<int>[] edgeList; //Danh sách cạnh của đồ thị, vấn đề ở đây là nó chưa biết trước được số cạnh của đồ thị
+                                      //Có 1 điểm khá thú vị đó là nếu số đỉnh lại nhiều hơn số cạnh 2 đơn vị trở lên thì chắc chắn đồ thị có chứa đỉnh cô lập 
+                                      //Ví dụ : A-B C : Có 3 đỉnh nhưng chỉ có 1 cạnh nối 2 đỉnh A và B ,đỉnh C là đỉnh cô lập 
+                                      //Còn nếu số cạnh chỉ ít hơn số đỉnh 1 đơn vị thì đồ thị không chứa đỉnh cô lập ,nó sẽ là đồ thị liên thông mạnh 
         //Properties : Có cũng được không có cũng chả sao 
         public int N
         {
             set { n = value; }
             get { return n; }
         }
+        public int M
+        {
+            set { m = value; }
+            get { return m; }
+        }
+    
         public int[,] Matrix
         {
             get { return matrix; }
@@ -29,6 +40,10 @@ namespace Lab01_ThuatToanDoThi
         public List<int>[] AdjacencyList
         {
             get { return adjacencyList; }
+        }
+        public List<int>[] EdgeList
+        {
+            get { return edgeList; }
         }
 
 
@@ -38,22 +53,12 @@ namespace Lab01_ThuatToanDoThi
         {
             N = n;
             matrix = new int[n, n];
-            adjacencyList = new List<int>[n];
-            for (int i = 0; i < n; i++)
-            {
-                adjacencyList[i] = new List<int>();
-            }
         }
 
         public Undirected_Graph()
         {
             n = 0;
-            matrix = new int[Max, Max];
-            adjacencyList = new List<int>[Max]; 
-            for (int i = 0; i < Max; i++)
-            {
-                adjacencyList[i] = new List<int>(); 
-            }
+            matrix = new int[Max, Max];    
         }
 
 
@@ -134,8 +139,39 @@ namespace Lab01_ThuatToanDoThi
         }
 
         //METHOD 01.3 : Phương thức xử lý danh sách cạnh 
-        public void EdgeList()
+        public void ReadEdgeList(string filePath)
         {
+            try
+            {
+                string[] lines = File.ReadAllLines(filePath);
+                string[] edgeListInfo = lines[0].Split(' ');  //Tách chuỗi ở dòng đầu tiên ra thành từng kí tự ,nhằm mục đích lấy thông tin về số cạnh và số đỉnh 
+                n = int.Parse(edgeListInfo[0]);  //Lấy số đỉnh
+                m = int.Parse(edgeListInfo[1]);  //Lấy số cạnh
+
+                edgeList = new List<int>[m];  //Tạo ra 1 List cha để chứa các List con
+                for (int i = 0; i < m; i++)
+                {
+                    edgeList[i] = new List<int>();  //Khởi tạo List con
+                }
+                
+                for (int i = 1; i <= m; i++ )
+                {
+                    if (!string.IsNullOrWhiteSpace(lines[i]))  //nếu chuỗi đang xét là không rỗng 
+                    {
+                        string[] datas = lines[i].Split(' ');  //Tách chuỗi ra thành từng kí tự
+                        foreach (string data in datas)  //Duyệt qua từng kí tự trong datas 
+                        {
+                            edgeList[i - 1].Add(int.Parse(data));  //Ép kiểu và thêm vào List con
+                        }
+                    }
+                }
+
+
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("There some troubles while reach to file, make sure your file path is correct :)  \n \n " + e.Message);
+            }
 
         }
 
@@ -144,7 +180,7 @@ namespace Lab01_ThuatToanDoThi
         //METHOD 02.1 : In ma trận ra màn hình console
         public void PrintMatrix()
         {
-            Console.WriteLine("The Adjecency Matrix Input");
+            Console.WriteLine("The Matrix Input");
             Console.WriteLine(n);
 
             for (int i = 0; i < n; i++)
@@ -175,13 +211,35 @@ namespace Lab01_ThuatToanDoThi
         }
 
         //METHOD 02.3 : In danh sách cạnh ra màn hình console 
+        public void PrintEdgeList()
+        {
+            Console.WriteLine("The Edge List Input");
+            Console.WriteLine(n + " " + m);  // Print the number of vertices and edges
+
+            if (edgeList.Length < m )
+            {
+                Console.WriteLine("Error: edgeList does not contain enough elements.");
+                return;
+            }
+
+            for (int i = 0; i < m; i++)
+            {
+                foreach (int value in edgeList[i])  
+                {
+                    Console.Write(value + " ");
+                }
+                Console.WriteLine();
+            }
+          
+            
+        }
         //---------------------------------------------------------------------------------------------------------------------
         //METHOD 03.1 : In ra số bậc của mỗi đỉnh trong ma trận 
         public void AdjacencyMatrixDegree ()
         {
 
             //Duyệt ma trận ( không có số đỉnh nha ,nếu muốn thì nhét N vô ) 
-            Console.WriteLine("The Adjecency Matrix Output");
+            Console.WriteLine("The Matrix Output");
             Console.WriteLine (n);
             for (int i = 0; i < n; i++)
             {
@@ -212,8 +270,45 @@ namespace Lab01_ThuatToanDoThi
             }
             Console.WriteLine("\n");    
         }
+        //METHOD 03.3 : In ra bậc của mỗi đỉnh ( danh sách cạnh - Edge List ) 
+        public void EdgeListDegree()
+        {
+            Console.WriteLine("The Edge List Output");
+            Console.WriteLine(n);
+
+            Dictionary<int, int> DegreeDict = CalculatorDegree(); 
+            foreach(var data in DegreeDict)
+            {
+                Console.WriteLine($"Đỉnh: {data.Key}, Bậc: {data.Value}");
+            }
+
+            Console.WriteLine();
+        }
+
+        //METHOD 03.3.1 : Phương thức tính bậc của mỗi đỉnh 
+        private Dictionary<int, int> CalculatorDegree()
+        {
+            Dictionary<int, int> degreeDict = new Dictionary<int, int>(); //Khởi tạo 1 Dictionary để lưu trữ bậc của mỗi đỉnh
+            //Trong đó value sẽ đại diện cho đỉnh và key sẽ đại diện cho bậc của đỉnh đó
+            
+            for ( int i = 0;i < m; i++)  //List edgeList vẫn chứa các List con nên vẫn phải duyệt 2 lần thôi 
+            {
+                foreach (int value in edgeList[i])
+                {
+                    if (degreeDict.ContainsKey(value))  //Nếu Dictionary đã chứa key đó rồi thì tăng giá trị của key đó lên 1 
+                    {
+                        degreeDict[value]++;
+                    }
+                    else if  (!degreeDict.ContainsKey(value))   //Nếu Dictionary chưa chứa key đó thì thêm vào 
+                    {
+                        degreeDict.Add(value, 1);  //        
+                    }
+                }
+            }
+            return degreeDict;
+        }
+
         //---------------------------------------------------------------------------------------------------------------------
-        
 
     }
 }
