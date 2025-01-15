@@ -11,12 +11,11 @@ namespace Lab01_ThuatToanDoThi
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
-            Undirected_Graph g = new Undirected_Graph();
-
-
-            g.ReadEdgeList("C:/Thuat_Toan_Do_Thi/Lab01_ThuatToanDoThi/Lab01_ThuatToanDoThi/Data/Data4.txt");
-            g.PrintEdgeList();
-            g.EdgeListDegree();
+            ConvertGraph graph = new ConvertGraph();
+            graph.ReadEdgeList("C:/Thuat_Toan_Do_Thi/Lab01_ThuatToanDoThi/Lab01_ThuatToanDoThi/Data/Data4.txt");
+            graph.PrintEdgeList();
+            graph.EdgeListDegree();
+            graph.ConvertEdgeToAdjList();
 
             Console.ReadKey();
         }

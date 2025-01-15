@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConvertGraph.cs" />
     <Compile Include="Directed_Graph.cs" />
     <Compile Include="Undirected_Graph.cs" />
     <Compile Include="Program.cs" />

@@ -36,14 +36,17 @@ namespace Lab01_ThuatToanDoThi
         public int[,] Matrix
         {
             get { return matrix; }
+            set { matrix = value; }
         }
         public List<int>[] AdjacencyList
         {
             get { return adjacencyList; }
+            set { adjacencyList = value; }
         }
         public List<int>[] EdgeList
         {
             get { return edgeList; }
+            set { edgeList = value; }
         }
 
 
@@ -63,7 +66,7 @@ namespace Lab01_ThuatToanDoThi
 
 
         //---------------------------------------------------------------------------------------------------------------------
-        //Method
+        //Method xử lý dữ liệu đọc được từ file
 
         //METHOD 01.1 : Method đọc dữ liệu từ file Data.txt ,sau đó lưu những gì nó đọc được vào mảng 2 chiều Matrix 
         public void ReadMatrix(string filePath)
@@ -107,8 +110,10 @@ namespace Lab01_ThuatToanDoThi
             {
                 string[] lines = File.ReadAllLines(filePath);
                 n = int.Parse(lines[0]);  //Cập nhật số đỉnh của danh sách 
+
                 adjacencyList = new List<int>[n];  //Tạo ra 1 List cha 
                 Console.WriteLine("Số đỉnh : " + n);
+
                 for (int i = 0; i < n; i++)
                 {
                     //Qua mỗi vòng lặp ,tạo ra 1 List con ở vị trí thứ i trong List cha 
@@ -176,7 +181,8 @@ namespace Lab01_ThuatToanDoThi
         }
 
 
-        //-------------------------------------------------------------------------------------------------------------------------
+        //-----------------------------------------------------------------------------------------------------------------------
+        //Method Print : Dùng để check xem dữ liệu đã đọc được từ file có đúng không
         //METHOD 02.1 : In ma trận ra màn hình console
         public void PrintMatrix()
         {
@@ -199,15 +205,16 @@ namespace Lab01_ThuatToanDoThi
             Console.WriteLine("The Adjacency List Input");
             Console.WriteLine(n); //In đỉnh ra trước 
 
-            for ( int i = 0;i < n; i++)  //Duyệt danh sách adjacencyList  
+            for (int i = 0; i < n; i++)  //Duyệt danh sách adjacencyList  
             {
+                
                 foreach(int value in adjacencyList[i])
                 {
                     Console.Write(value + " ");
                 }
-                Console.WriteLine() ;
+               
+                Console.WriteLine() ;                 
             }
-            
         }
 
         //METHOD 02.3 : In danh sách cạnh ra màn hình console 
@@ -216,6 +223,7 @@ namespace Lab01_ThuatToanDoThi
             Console.WriteLine("The Edge List Input");
             Console.WriteLine(n + " " + m);  // Print the number of vertices and edges
 
+            // test debug 
             if (edgeList.Length < m )
             {
                 Console.WriteLine("Error: edgeList does not contain enough elements.");
@@ -256,6 +264,7 @@ namespace Lab01_ThuatToanDoThi
             }
             Console.WriteLine("\n");
         }
+
         //METHOD 03.2 : In ra bậc của mỗi đỉnh ( danh sách kề - Adjacency List ) 
         public void AdjacencyListDegree()
         {

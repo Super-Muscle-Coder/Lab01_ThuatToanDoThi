@@ -20,11 +20,11 @@ namespace Lab01_ThuatToanDoThi
         {
             //Duyệt ma trận 
             int[] indegrees = new int[N];   
-            for (int i = 1; i < N; i++)
+            for (int i = 0; i < N; i++)
             {
                 for (int j = 0; j < N; j++)
                 {
-                    if (Matrix[i-1,j] != 0 )
+                    if (Matrix[i,j] != 0 )
                     {
                         indegrees[j]++;
                     }
@@ -37,17 +37,17 @@ namespace Lab01_ThuatToanDoThi
         private int[] OutDegrees ()
         {
             int[] outdegrees = new int[N];
-            for (int i = 1; i < N; i++)
+            for (int i = 0; i < N; i++)
             {
                 int count = 0; 
                 for (int j = 0; j < N; j++)
                 {
-                    if (Matrix[i-1 ,j] != 0 )
+                    if (Matrix[i,j] != 0 )
                     {
                         count++;
                     }
-                }
-                outdegrees[i-1] = count;
+                } 
+                outdegrees[i] = count;
             }
             return outdegrees;
         }
@@ -58,10 +58,10 @@ namespace Lab01_ThuatToanDoThi
             int[] indegrees = InDegrees();
             int[] outdegrees = OutDegrees();
             Console.WriteLine("Số đỉnh : "+N);
-            for (int i = 1; i < N; i++)
+            for (int i = 0; i < N; i++)
             {
                 Console.WriteLine($"Đỉnh {i}: ");
-                Console.WriteLine($"Bậc vào : "+indegrees[i-1] + "  |  Bậc ra : " + outdegrees[i-1]);
+                Console.WriteLine($"Bậc vào : "+indegrees[i] + "  |  Bậc ra : " + outdegrees[i]);
             }
         }
     }
